@@ -16,8 +16,8 @@ Router.post('/creating', vehicleController.creating);
 Router.get('/', vehicleController.find);
 Router.get('/:name', vehicleController.getoneuser);
 Router.post('/userid', vehicleController.findbyID);
-
-
+Router.post('/match', vehicleController.match);
+Router.post('/name', vehicleController.gets); // query
 
 
 module.exports = Router

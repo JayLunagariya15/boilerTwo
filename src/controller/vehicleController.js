@@ -50,9 +50,9 @@ const creating = async (req, res) => {
 
 //get all details with user
 const find = async(req,res)=>{
-// const{name,type, company, manufectured, imported, exported } = req.body
+const{name,type, company, manufectured, imported, exported } = req.body
     try{
-        const getall = await user.find({}).populate('link');
+        const getall = await user.find({},{name:1}).populate({path:'link'}); //, match:{ $expr: {type:type}}
         console.log("get all : ", getall);
 
         res.status(200).json(getall);
@@ -70,7 +70,7 @@ const getoneuser = async (req, res) => {
   const name = req.params.name
   
   try{
-      const oneUser =  await user.findOne({name:name}).populate('link');
+      const oneUser =  await user.findOne({name:name}).populate({path:'link'});
       console.log(oneUser);
 
       return res.status(200).json(oneUser);
@@ -94,4 +94,38 @@ const findbyID =  async(req,res)=>{
   };
 };
 
-module.exports = { creating , find, getoneuser, findbyID }; // ,vehicleRegister
+
+
+//$match
+const match = async(req,res)=>{
+  const {type,name} = req.body
+  try{
+    const foundtype = await vehicle.find({type:type});
+      if(!foundtype){
+        return res.status(400).json({message : "no types in database"})
+      }else{
+        const mat = await user.find({},{name:1}).populate({path:'link', match:{type:type}});
+      
+      return res.status(200).json(mat);
+      }
+    }catch(err){
+      res.status(400).json({message: err.message})
+  }
+}
+
+
+// get user using query part
+const gets = async(req,res)=>{
+
+  const name = req.query.name
+  try{
+    const namequery =  await user.findOne({name:name}).populate({path:'link'});
+    console.log(namequery);
+
+    return res.status(200).json(namequery);
+} catch(err){
+    return res.status(400).json({message: err.message});
+}
+};
+
+module.exports = { creating , find, getoneuser, findbyID ,match , gets}; // ,vehicleRegister

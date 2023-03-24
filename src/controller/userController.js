@@ -88,5 +88,4 @@ const modify = async (req, res) => {
 
 
 
-
 module.exports = {register, updateoneuser, updatemanyuser,deleteoneuser, modify};
